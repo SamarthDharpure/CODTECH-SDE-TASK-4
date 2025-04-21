@@ -1,0 +1,108 @@
+/* style.css */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f7f9fc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.todo-container {
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+form {
+  display: flex;
+  gap: 0.5rem;
+}
+
+input[type="text"] {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 1rem;
+}
+
+li {
+  background: #f1f1f1;
+  margin-bottom: 0.5rem;
+  padding: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 4px;
+}
+
+/* utils/domHelpers.js */
+function createElement(tag, className, textContent) {
+  const element = document.createElement(tag);
+  if (className) element.className = className;
+  if (textContent) element.textContent = textContent;
+  return element;
+}
+
+function getElement(selector) {
+  return document.querySelector(selector);
+}
+
+/* app.js */
+const todoForm = getElement('#todo-form');
+const todoInput = getElement('#todo-input');
+const todoList = getElement('#todo-list');
+
+let todos = [];
+
+function renderTodos() {
+  todoList.innerHTML = '';
+  todos.forEach((todo, index) => {
+    const li = createElement('li');
+    const span = createElement('span', '', todo);
+    const deleteBtn = createElement('button', '', '❌');
+
+    deleteBtn.addEventListener('click', () => deleteTodo(index));
+    li.appendChild(span);
+    li.appendChild(deleteBtn);
+    todoList.appendChild(li);
+  });
+}
+
+function addTodo(e) {
+  e.preventDefault();
+  const task = todoInput.value.trim();
+  if (task) {
+    todos.push(task);
+    todoInput.value = '';
+    renderTodos();
+  }
+}
+
+function deleteTodo(index) {
+  todos.splice(index, 1);
+  renderTodos();
+}
+
+todoForm.addEventListener('submit', addTodo);
+
+document.addEventListener('DOMContentLoaded', renderTodos);
